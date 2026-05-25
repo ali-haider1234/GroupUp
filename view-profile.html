@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Profile — GroupUp</title>
+  <meta name="description" content="View a student's FYP profile, project domain, skills and group availability.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/pages.css">
+</head>
+<body class="view-profile-body" data-page="view-profile">
+
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- ══════════════════════════════════════════════
+       NAVBAR
+  ═══════════════════════════════════════════════ -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <a href="dashboard.html" class="nav-brand" aria-label="GroupUp home">
+      <div class="brand-icon" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+      </div>
+      GroupUp
+    </a>
+
+    <nav class="nav-links">
+      <a href="dashboard.html" class="nav-link active">Browse</a>
+      <a href="requests.html" class="nav-link">Requests</a>
+      <a href="mygroup.html" class="nav-link">My Group</a>
+      <a href="supervisors.html" class="nav-link">Supervisors</a>
+      <a href="about.html" class="nav-link">About</a>
+    </nav>
+
+    <div class="nav-actions">
+      <div class="nav-user" id="nav-user-trigger" role="button" tabindex="0" aria-haspopup="true" aria-label="User menu">
+        <div class="nav-avatar" id="nav-avatar">?</div>
+        <div class="nav-user-info">
+          <span class="nav-user-name" id="nav-user-name">Loading</span>
+          <span class="nav-user-roll" id="nav-user-roll">--</span>
+        </div>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        <div class="user-dropdown" id="user-dropdown" role="menu">
+          <a href="profile.html" class="dropdown-item" role="menuitem">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            My Profile
+          </a>
+          <a href="mygroup.html" class="dropdown-item" role="menuitem">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            My Group
+          </a>
+          <div class="dropdown-divider"></div>
+          <div class="dropdown-item danger" id="logout-btn" role="menuitem" tabindex="0">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Sign Out
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ══════════════════════════════════════════════
+       PAGE CONTENT (injected by JS)
+  ═══════════════════════════════════════════════ -->
+  <div class="view-profile-page" id="vp-page">
+
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="dashboard.html">Browse</a>
+      <span class="breadcrumb-sep" aria-hidden="true">›</span>
+      <span class="breadcrumb-current" id="bc-name">Student Profile</span>
+    </nav>
+
+    <!-- Content injected here -->
+    <div id="vp-content">
+      <div class="empty-state">
+        <div class="empty-icon">⏳</div>
+        <div class="empty-title">Loading profile…</div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.50.0/dist/umd/supabase.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    let currentStudent = null;
+
+    let isPendingRequest = false;
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      initPageAnimation();
+      initNavbarScroll();
+      initDropdown('#nav-user-trigger', '#user-dropdown');
+
+      // Auth
+      let currentUser = Auth.getSession();
+      if (!currentUser) {
+        window.location.href = 'login.html';
+        return;
+      }
+      if (supabaseClient && currentUser?.id) {
+        const refreshed = await fetchProfileWithGroupInfo(currentUser.id);
+        if (refreshed) {
+          currentUser = refreshed;
+          Auth.setSession(refreshed);
+        }
+      }
+      renderNavUser(currentUser);
+
+      // Get roll no from URL ?roll=23F-0001
+      const params   = new URLSearchParams(window.location.search);
+      const rollNo   = params.get('roll');
+      const student  = rollNo
+        ? (supabaseClient ? await fetchProfileByRollNo(rollNo) : GroupUp.users[rollNo])
+        : null;
+
+      if (!student) {
+        document.getElementById('vp-content').innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">🔍</div>
+            <div class="empty-title">Student not found</div>
+            <div class="empty-sub">This profile doesn't exist or the roll number is incorrect.</div>
+            <br>
+            <a href="dashboard.html" class="btn btn-primary" style="margin-top:8px">← Back to Browse</a>
+          </div>`;
+        return;
+      }
+
+      currentStudent = student;
+      document.getElementById('bc-name').textContent = student.name;
+      document.title = `${student.name} — GroupUp`;
+      isPendingRequest = await checkPendingRequest(currentUser, student);
+      renderViewProfile(student, currentUser, isPendingRequest);
+    });
+
+    function renderNavUser(user) {
+      document.getElementById('nav-user-name').textContent = user.name.split(' ')[0];
+      document.getElementById('nav-user-roll').textContent = user.rollNo;
+      const av = document.getElementById('nav-avatar');
+      av.innerHTML = user.avatar ? `<img src="${user.avatar}" alt="${user.name}">` : getInitials(user.name);
+    }
+
+    function renderViewProfile(student, currentUser, pending) {
+      const compatible = GroupUp.canGroupWith(currentUser.department, student.department);
+      const needed     = getMembersNeeded(student.memberCount, student.maxMembers);
+      const canConnect = compatible && student.lookingFor !== 'full' && !pending;
+      const isSelf     = currentUser.rollNo === student.rollNo;
+
+      const statusLabel = getStatusLabel(student.lookingFor);
+      const statusCls   = student.lookingFor || 'open';
+
+      // Build slot circles
+      let slotCircles = '';
+      for (let i = 0; i < student.maxMembers; i++) {
+        if (i === 0) {
+          slotCircles += `
+            <div class="slot-item">
+              <div class="slot-circle filled" title="${student.name}">
+                ${student.avatar
+                  ? `<img src="${student.avatar}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`
+                  : getInitials(student.name)}
+              </div>
+              <div class="slot-label filled">Member 1</div>
+            </div>`;
+        } else if (i < student.memberCount) {
+          slotCircles += `
+            <div class="slot-item">
+              <div class="slot-circle filled">M${i + 1}</div>
+              <div class="slot-label filled">Member ${i + 1}</div>
+            </div>`;
+        } else {
+          slotCircles += `
+            <div class="slot-item">
+              <div class="slot-circle empty" title="Open slot">+</div>
+              <div class="slot-label">Open</div>
+            </div>`;
+        }
+      }
+
+      // Department notice
+      let noticeHtml = '';
+      if (isSelf) {
+        noticeHtml = ``;
+      } else if (!compatible) {
+        noticeHtml = `
+          <div class="dept-rule-notice error-notice">
+            <span class="notice-icon">⛔</span>
+            <div>
+              <strong>Department Restriction:</strong> Your department (${currentUser.department}) cannot form groups with ${student.department} students. Only CS, SE, and AI departments can group together; EE is limited to within EE.
+            </div>
+          </div>`;
+      } else if (pending) {
+        noticeHtml = `
+          <div class="dept-rule-notice success-notice">
+            <span class="notice-icon">⏳</span>
+            <div>
+              <strong>Pending:</strong> Your connection request to ${student.name} is already sent. Please wait for a response.
+            </div>
+          </div>`;
+      } else if (student.lookingFor === 'full') {
+        noticeHtml = `
+          <div class="dept-rule-notice error-notice">
+            <span class="notice-icon">🔒</span>
+            <div>
+              <strong>Group Complete:</strong> ${student.name}'s group is already full (${student.memberCount}/${student.maxMembers} members). You cannot connect with this group.
+            </div>
+          </div>`;
+      } else {
+        noticeHtml = `
+          <div class="dept-rule-notice success-notice">
+            <span class="notice-icon">✓</span>
+            <div>
+              <strong>Compatible:</strong> You (${currentUser.department}) can group with ${student.name} (${student.department}). There ${needed === 1 ? 'is' : 'are'} <strong>${needed} open slot${needed !== 1 ? 's' : ''}</strong> in this group.
+            </div>
+          </div>`;
+      }
+
+      // Skills
+      const skillsHtml = (student.skills || []).length
+        ? (student.skills || []).map(s => `<span class="skill-pill">${s}</span>`).join('')
+        : `<span style="font-size:.875rem;color:var(--gray-400)">No skills listed</span>`;
+
+      // Connect/Action buttons
+      let actionBtns = '';
+      if (isSelf) {
+        actionBtns = `<a href="profile.html"><button class="btn btn-primary">Edit My Profile</button></a>`;
+      } else if (!compatible) {
+        actionBtns = `<button class="btn btn-outline" disabled style="cursor:not-allowed;opacity:.5">⛔ Dept. Restricted</button>`;
+      } else if (student.lookingFor === 'full') {
+        actionBtns = `<button class="btn btn-outline" disabled style="cursor:not-allowed;opacity:.5">🔒 Group Full</button>`;
+      } else if (pending) {
+        actionBtns = `<button class="btn btn-outline" disabled style="cursor:not-allowed;opacity:.5">⏳ Pending</button>`;
+      } else {
+        actionBtns = `
+          <button class="btn btn-outline" onclick="window.history.back()">← Back</button>
+          <button class="btn btn-primary" id="connect-btn" onclick="handleConnectPage()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+            Send Connect Request
+          </button>`;
+      }
+
+      document.getElementById('vp-content').innerHTML = `
+
+        <!-- ── Hero Card ── -->
+        <div class="vp-hero-card">
+          <div class="vp-hero-banner"></div>
+          <div class="vp-hero-body">
+            <div class="vp-avatar-wrap">
+              <div class="vp-avatar" aria-label="${student.name}'s profile photo">
+                ${student.avatar
+                  ? `<img src="${student.avatar}" alt="${student.name}">`
+                  : `<span>${getInitials(student.name)}</span>`}
+              </div>
+              <span class="vp-status-pill ${statusCls}" aria-label="Status: ${statusLabel}">${statusLabel}</span>
+            </div>
+
+            <div class="vp-hero-top">
+              <div class="vp-name-block">
+                <div class="vp-name">${student.name}</div>
+                <div class="vp-roll">${student.rollNo}</div>
+                <div class="vp-meta-badges">
+                  <span class="badge ${deptBadgeColor(student.department)}">${student.department} — ${formatDept(student.department)}</span>
+                  <span class="badge badge-gray">Semester ${student.semester || '?'}</span>
+                  ${student.domain ? `<span class="badge badge-blue">${student.domain}</span>` : ''}
+                </div>
+              </div>
+              <div class="vp-actions">
+                ${actionBtns}
+              </div>
+            </div>
+
+            ${noticeHtml}
+          </div>
+        </div>
+
+        <!-- ── Detail Grid ── -->
+        <div class="vp-detail-grid">
+
+          <!-- Group Slots -->
+          <div class="vp-info-card">
+            <div class="vp-card-head">
+              <div class="vp-card-head-icon" aria-hidden="true">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              </div>
+              <span class="vp-card-title">Group Slots</span>
+            </div>
+            <div class="vp-card-body">
+              <div class="group-slots-visual">
+                <div class="slots-row">${slotCircles}</div>
+                <div class="slots-summary">
+                  <div class="slots-summary-main">${student.memberCount} / ${student.maxMembers} Filled</div>
+                  <div class="slots-summary-sub">${needed > 0 ? `${needed} open slot${needed !== 1 ? 's' : ''} remaining` : 'Group is complete'}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Academic Info -->
+          <div class="vp-info-card">
+            <div class="vp-card-head">
+              <div class="vp-card-head-icon" aria-hidden="true">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 4 3 6 3s6-1 6-3v-5"/></svg>
+              </div>
+              <span class="vp-card-title">Academic Info</span>
+            </div>
+            <div class="vp-card-body">
+              <div class="kv-list">
+                <div class="kv-row">
+                  <span class="kv-key">Department</span>
+                  <span class="kv-val"><span class="badge ${deptBadgeColor(student.department)}">${student.department}</span></span>
+                </div>
+                <div class="kv-row">
+                  <span class="kv-key">Semester</span>
+                  <span class="kv-val">Semester ${student.semester || '—'}</span>
+                </div>
+                <div class="kv-row">
+                  <span class="kv-key">Domain</span>
+                  <span class="kv-val">${student.domain || '—'}</span>
+                </div>
+                <div class="kv-row">
+                  <span class="kv-key">Roll No.</span>
+                  <span class="kv-val mono">${student.rollNo}</span>
+                </div>
+                <div class="kv-row">
+                  <span class="kv-key">Email</span>
+                  <span class="kv-val mono" style="font-size:.75rem">${student.email}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bio -->
+          ${student.bio ? `
+          <div class="vp-info-card full-width">
+            <div class="vp-card-head">
+              <div class="vp-card-head-icon" aria-hidden="true">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+              </div>
+              <span class="vp-card-title">About / FYP Idea</span>
+            </div>
+            <div class="vp-card-body">
+              <p class="vp-bio">${student.bio}</p>
+            </div>
+          </div>` : ''}
+
+          <!-- Skills -->
+          <div class="vp-info-card full-width">
+            <div class="vp-card-head">
+              <div class="vp-card-head-icon" aria-hidden="true">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              </div>
+              <span class="vp-card-title">Technical Skills</span>
+            </div>
+            <div class="vp-card-body">
+              <div class="skills-display">${skillsHtml}</div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ── Connect CTA Strip ── -->
+        ${!isSelf ? `
+        <div class="connect-cta-strip">
+          <div class="connect-cta-text">
+            <div class="connect-cta-title">
+              ${canConnect
+                ? `Interested in joining ${student.name}'s group?`
+                : student.lookingFor === 'full'
+                  ? 'This group is no longer accepting members.'
+                  : 'Department rules prevent you from connecting.'}
+            </div>
+            <div class="connect-cta-sub">
+              ${canConnect
+                ? `Send a connection request and ${student.name} will be notified.`
+                : `Try browsing other students from compatible departments.`}
+            </div>
+          </div>
+          <div class="connect-cta-btn">
+            <a href="dashboard.html"><button class="btn btn-outline">← Browse More</button></a>
+            ${canConnect
+              ? `<button class="btn btn-primary" onclick="handleConnectPage()">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+                  Send Request
+                 </button>`
+              : `<button class="btn btn-outline" disabled style="opacity:.5;cursor:not-allowed">${pending ? '⏳ Pending' : student.lookingFor === 'full' ? '🔒 Group Full' : '⛔ Restricted'}</button>`}
+          </div>
+        </div>` : ''}
+      `;
+    }
+
+    async function handleConnectPage() {
+      const currentUser = Auth.getSession();
+      const target = currentStudent;
+      if (!currentUser || !target) return;
+
+      if (isPendingRequest) {
+        showToast('Request already pending.', 'info');
+        return;
+      }
+
+      if (!GroupUp.canGroupWith(currentUser.department, target.department)) {
+        showToast(`⛔ Dept. rule: ${currentUser.department} cannot group with ${target.department}`, 'error');
+        return;
+      }
+      if (target.lookingFor === 'full') {
+        showToast('This group is already complete.', 'error');
+        return;
+      }
+
+      // Disable button to prevent double-send
+      const btn = document.getElementById('connect-btn');
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<span class="spinner"></span> Sending…`;
+      }
+
+      if (supabaseClient && currentUser?.id && target?.id) {
+        const result = await sendConnectionRequest(currentUser.id, target.id);
+        if (!result.ok) {
+          showToast(result.msg || 'Failed to send request.', 'error');
+          if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = 'Send Connect Request';
+          }
+          return;
+        }
+        isPendingRequest = true;
+      }
+
+      showToast(`✓ Connection request sent to ${target.name}!`, 'success');
+      if (btn) {
+        btn.innerHTML = '⏳ Pending';
+        btn.style.background = 'var(--blue-700)';
+        btn.style.cursor = 'not-allowed';
+      }
+    }
+
+    async function checkPendingRequest(currentUser, student) {
+      if (!currentUser || !student) return false;
+      if (supabaseClient && currentUser?.id && student?.id) {
+        const { data } = await supabaseClient
+          .from('connection_requests')
+          .select('id')
+          .eq('from_user_id', currentUser.id)
+          .eq('to_user_id', student.id)
+          .eq('status', 'pending')
+          .maybeSingle();
+        return !!data;
+      }
+
+      const sent = JSON.parse(sessionStorage.getItem('sent_requests') || '[]');
+      return sent.includes(student.rollNo);
+    }
+
+    document.getElementById('logout-btn')?.addEventListener('click', () => {
+      Auth.logout();
+      window.location.href = 'login.html';
+    });
+  </script>
+</body>
+</html>

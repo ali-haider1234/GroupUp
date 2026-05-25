@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — GroupUp | Find FYP Partners</title>
+  <meta name="description" content="Browse and connect with FAST University students looking for FYP group members.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body class="dashboard-body" data-page="dashboard">
+
+  <!-- ── Toast Container ── -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       NAVBAR
+  ════════════════════════════════════════════════════════ -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <!-- Brand -->
+    <a href="dashboard.html" class="nav-brand" aria-label="GroupUp home">
+      <div class="brand-icon" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+      </div>
+      GroupUp
+    </a>
+
+    <!-- Center Links -->
+    <nav class="nav-links" aria-label="Page navigation">
+      <a href="dashboard.html" class="nav-link active" aria-current="page">Browse</a>
+      <a href="requests.html" class="nav-link">Requests</a>
+      <a href="mygroup.html" class="nav-link">My Group</a>
+      <a href="supervisors.html" class="nav-link">Supervisors</a>
+      <a href="about.html" class="nav-link">About</a>
+    </nav>
+
+    <div class="nav-actions">
+      <!-- User menu -->
+      <div class="nav-user" id="nav-user-trigger" role="button" tabindex="0" aria-haspopup="true" aria-label="User menu">
+        <div class="nav-avatar" id="nav-avatar" aria-hidden="true">?</div>
+        <div class="nav-user-info">
+          <span class="nav-user-name" id="nav-user-name">Loading</span>
+          <span class="nav-user-roll" id="nav-user-roll">--</span>
+        </div>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+
+        <!-- Dropdown -->
+        <div class="user-dropdown" id="user-dropdown" role="menu">
+          <a href="profile.html" class="dropdown-item" role="menuitem">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            My Profile
+          </a>
+          <a href="mygroup.html" class="dropdown-item" role="menuitem">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            My Group
+          </a>
+          <div class="dropdown-divider"></div>
+          <div class="dropdown-item danger" id="logout-btn" role="menuitem" tabindex="0">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Sign Out
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ═══════════════════════════════════════════════════════
+       HERO / FILTER SECTION
+  ════════════════════════════════════════════════════════ -->
+  <header class="dashboard-hero" role="banner">
+    <div class="dashboard-hero-inner">
+      <div class="dashboard-welcome">
+        <h1>Find Your <span>FYP Team</span></h1>
+        <p>Browse students by department, domain, or availability — and connect instantly.</p>
+      </div>
+
+      <!-- Filter Row -->
+      <div class="filter-row" role="search" aria-label="Search and filter students">
+        <div class="filter-search form-input-icon-wrap">
+          <span class="input-icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </span>
+          <input type="search" id="filter-search" class="form-input" placeholder="Search by name, roll no, domain…" aria-label="Search students">
+        </div>
+
+        <select id="filter-dept" class="filter-select" aria-label="Filter by department">
+          <option value="">All Departments</option>
+          <option value="CS">CS</option>
+          <option value="SE">SE</option>
+          <option value="AI">AI</option>
+          <option value="EE">EE</option>
+        </select>
+
+        <select id="filter-domain" class="filter-select" aria-label="Filter by domain">
+          <option value="">All Domains</option>
+          <option>Artificial Intelligence</option>
+          <option>Machine Learning</option>
+          <option>Data Science</option>
+          <option>Web Development</option>
+          <option>Mobile Development</option>
+          <option>Cybersecurity</option>
+          <option>Cloud Computing</option>
+          <option>Game Development</option>
+          <option>Embedded Systems</option>
+          <option>Power Systems</option>
+          <option>Computer Vision</option>
+          <option>NLP / Chatbots</option>
+          <option>Blockchain</option>
+          <option>IoT</option>
+        </select>
+
+        <select id="filter-status" class="filter-select" aria-label="Filter by group status">
+          <option value="">All Status</option>
+          <option value="open">Looking</option>
+          <option value="almost">Almost Full</option>
+          <option value="full">Full</option>
+        </select>
+      </div>
+
+      <!-- Filter Chips -->
+      <div class="filter-chips" style="margin-top:12px;" role="group" aria-label="Quick filters">
+        <button class="filter-chip" data-filter="looking" aria-pressed="false">
+          <span class="chip-icon" aria-hidden="true">🔍</span>
+          Actively Looking
+        </button>
+      </div>
+    </div>
+
+    <!-- Stats Bar -->
+    <div class="stats-bar" role="complementary" aria-label="Statistics">
+      <div class="stat-item">
+        <div class="stat-icon blue" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div class="stat-info">
+          <span class="stat-value" id="stat-total">—</span>
+          <span class="stat-label">Total Students</span>
+        </div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-icon green" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div class="stat-info">
+          <span class="stat-value" id="stat-open">—</span>
+          <span class="stat-label">Actively Looking</span>
+        </div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-icon orange" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        </div>
+        <div class="stat-info">
+          <span class="stat-value" id="stat-almost">—</span>
+          <span class="stat-label">Almost Full</span>
+        </div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-icon purple" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <div class="stat-info">
+          <span class="stat-value" id="stat-full">—</span>
+          <span class="stat-label">Groups Complete</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══════════════════════════════════════════════════════
+       MAIN CONTENT
+  ════════════════════════════════════════════════════════ -->
+  <main class="dashboard-main" role="main">
+
+    <!-- Sidebar -->
+    <aside class="sidebar" role="complementary" aria-label="My profile and navigation">
+
+      <!-- My Profile Mini -->
+      <div class="sidebar-card">
+        <p class="sidebar-card-title">My Profile</p>
+        <div class="my-profile-mini">
+          <div class="my-avatar" id="my-avatar" aria-label="My profile photo">
+            <span>A</span>
+          </div>
+          <div class="my-name" id="my-name">Loading…</div>
+          <div class="my-roll" id="my-roll">—</div>
+          <div class="my-badges">
+            <span class="badge badge-blue" id="my-dept-badge">CS</span>
+            <span class="badge badge-gray" id="my-domain-badge" style="display:none">—</span>
+          </div>
+          <div class="group-progress">
+            <div class="group-progress-label">
+              <span>Group Progress</span>
+              <span id="group-label">1/3 · need 2</span>
+            </div>
+            <div class="progress-bar" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" aria-label="Group completion">
+              <div class="progress-fill" id="group-fill" style="width:25%"></div>
+            </div>
+          </div>
+          <a href="profile.html" style="display:block;width:100%;margin-top:12px">
+            <button class="btn btn-outline w-full" style="width:100%;font-size:0.8rem;padding:8px">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              Edit Profile
+            </button>
+          </a>
+        </div>
+      </div>
+
+      <!-- Quick Nav -->
+      <div class="sidebar-card">
+        <p class="sidebar-card-title">Quick Nav</p>
+        <nav class="sidebar-nav-items" aria-label="Quick navigation">
+          <div class="sidebar-nav-item active">
+            <span class="nav-icon" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            </span>
+            Browse Students
+          </div>
+          <a href="requests.html" class="sidebar-nav-item" style="text-decoration:none">
+            <span class="nav-icon" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </span>
+            Requests
+            <span class="nav-count" aria-label="2 pending requests">2</span>
+          </a>
+          <a href="mygroup.html" class="sidebar-nav-item" style="text-decoration:none">
+            <span class="nav-icon" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </span>
+            My Group
+          </a>
+          <a href="profile.html" class="sidebar-nav-item" style="text-decoration:none">
+            <span class="nav-icon" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 1.81 14.24M4.93 4.93a10 10 0 0 0-1.81 14.24"/></svg>
+            </span>
+            Settings
+          </a>
+        </nav>
+      </div>
+
+      <!-- Dept Rules Info -->
+      <div class="sidebar-card" style="border:1.5px solid var(--blue-100); background:var(--blue-50);">
+        <p class="sidebar-card-title" style="color:var(--blue-500)">Dept. Grouping Rules</p>
+        <div style="font-size:0.78rem;line-height:1.6;color:var(--blue-700)">
+          <p style="display:flex;gap:6px;align-items:flex-start;margin-bottom:6px">
+            <span style="margin-top:2px">✓</span>
+            <span><strong>CS</strong> ↔ <strong>SE</strong> can form groups together</span>
+          </p>
+          <p style="display:flex;gap:6px;align-items:flex-start">
+            <span style="margin-top:2px">⚠</span>
+            <span><strong>EE</strong> can only group within EE department</span>
+          </p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Students Section -->
+    <section class="students-section" aria-label="Student listings">
+      <div class="section-header">
+        <h2 class="section-title">Students</h2>
+        <span class="section-count" id="student-count" aria-live="polite">Loading…</span>
+      </div>
+
+      <!-- Grid -->
+      <div class="students-grid" id="students-grid" role="list" aria-label="Student cards">
+        <!-- Injected by JS -->
+        <div class="empty-state">
+          <div class="empty-icon">⏳</div>
+          <div class="empty-title">Loading students…</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.50.0/dist/umd/supabase.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>

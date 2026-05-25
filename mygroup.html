@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Group — GroupUp</title>
+  <meta name="description" content="View and manage your FYP group members on GroupUp.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/pages.css">
+</head>
+<body class="mygroup-body" data-page="mygroup">
+
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- ══════════════════════════════════════════════
+       NAVBAR
+  ═══════════════════════════════════════════════ -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <a href="dashboard.html" class="nav-brand" aria-label="GroupUp home">
+      <div class="brand-icon" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+      </div>
+      GroupUp
+    </a>
+
+    <nav class="nav-links">
+      <a href="dashboard.html" class="nav-link">Browse</a>
+      <a href="requests.html" class="nav-link">Requests</a>
+      <a href="mygroup.html" class="nav-link active" aria-current="page">My Group</a>
+      <a href="supervisors.html" class="nav-link">Supervisors</a>
+      <a href="about.html" class="nav-link">About</a>
+    </nav>
+
+    <div class="nav-actions">
+      <div class="nav-user" id="nav-user-trigger" role="button" tabindex="0" aria-haspopup="true" aria-label="User menu">
+        <div class="nav-avatar" id="nav-avatar">?</div>
+        <div class="nav-user-info">
+          <span class="nav-user-name" id="nav-user-name">Loading</span>
+          <span class="nav-user-roll" id="nav-user-roll">--</span>
+        </div>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        <div class="user-dropdown" id="user-dropdown" role="menu">
+          <a href="profile.html" class="dropdown-item" role="menuitem">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            My Profile
+          </a>
+          <a href="requests.html" class="dropdown-item" role="menuitem">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Requests
+          </a>
+          <div class="dropdown-divider"></div>
+          <div class="dropdown-item danger" id="logout-btn" role="menuitem" tabindex="0">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Sign Out
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ══════════════════════════════════════════════
+       PAGE CONTENT
+  ═══════════════════════════════════════════════ -->
+  <div class="mygroup-page">
+
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="dashboard.html">Dashboard</a>
+      <span class="breadcrumb-sep" aria-hidden="true">›</span>
+      <span class="breadcrumb-current">My Group</span>
+    </nav>
+
+    <!-- Header + Group Status Card -->
+    <div class="group-header-card" id="group-header">
+      <!-- Injected by JS -->
+    </div>
+
+    <!-- Members Grid Label -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+      <h2 style="font-size:0.95rem;font-weight:700;color:var(--gray-900)">Group Members</h2>
+      <a href="dashboard.html" class="btn btn-outline btn-sm">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        Find Members
+      </a>
+    </div>
+
+    <!-- Members Grid -->
+    <div class="members-grid" id="members-grid" role="list" aria-label="Group members">
+      <!-- Injected by JS -->
+    </div>
+
+    <!-- Group Info Panels -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:4px;" id="group-panels">
+      <!-- Injected by JS -->
+    </div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.50.0/dist/umd/supabase.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      initPageAnimation();
+      initNavbarScroll();
+      initDropdown('#nav-user-trigger', '#user-dropdown');
+
+      let currentUser = Auth.getSession();
+      if (!currentUser) {
+        window.location.href = 'login.html';
+        return;
+      }
+      if (supabaseClient && currentUser?.id) {
+        const refreshed = await fetchProfileWithGroupInfo(currentUser.id);
+        if (refreshed) {
+          currentUser = refreshed;
+          Auth.setSession(refreshed);
+        }
+      }
+
+      renderNavUser(currentUser);
+
+      if (supabaseClient && currentUser?.id) {
+        const groupState = await loadGroupState(currentUser);
+        renderGroupHeader(currentUser, groupState);
+        renderMembers(groupState, currentUser);
+        renderGroupPanels(currentUser, groupState);
+      }
+
+      document.getElementById('logout-btn')?.addEventListener('click', () => { Auth.logout(); window.location.href = 'login.html'; });
+    });
+
+    async function loadGroupState(currentUser) {
+      const { data: memberRow } = await supabaseClient
+        .from('group_members')
+        .select('group_id')
+        .eq('user_id', currentUser.id)
+        .maybeSingle();
+
+      const groupId = memberRow?.group_id || currentUser.groupId || null;
+      if (!groupId) {
+        return { group: null, members: [currentUser], memberCount: 1, maxMembers: currentUser.maxMembers || 3 };
+      }
+
+      const [{ data: group }, { data: members }] = await Promise.all([
+        supabaseClient.from('groups').select('*').eq('id', groupId).single(),
+        supabaseClient.from('group_members').select('user_id, role').eq('group_id', groupId)
+      ]);
+
+      const memberIds = (members || []).map(m => m.user_id);
+      const profiles = await fetchProfilesByUserIds(memberIds);
+      const profileMap = profiles.reduce((acc, profile) => {
+        acc[profile.id] = profile;
+        return acc;
+      }, {});
+
+      const mappedMembers = (members || []).map(m => ({
+        ...profileMap[m.user_id],
+        role: m.role
+      })).filter(Boolean);
+
+      return {
+        group,
+        members: mappedMembers,
+        memberCount: mappedMembers.length,
+        maxMembers: group?.max_members || currentUser.maxMembers || 3
+      };
+    }
+
+    function renderNavUser(user) {
+      document.getElementById('nav-user-name').textContent = user.name.split(' ')[0];
+      document.getElementById('nav-user-roll').textContent = user.rollNo;
+      const av = document.getElementById('nav-avatar');
+      av.innerHTML = user.avatar ? `<img src="${user.avatar}" alt="${user.name}">` : getInitials(user.name);
+    }
+
+    function renderGroupHeader(user, groupState = {}) {
+      const count  = groupState.memberCount || user.memberCount  || 1;
+      const max    = groupState.maxMembers  || user.maxMembers   || 3;
+      const needed = max - count;
+      const pct    = Math.round((count / max) * 100);
+
+      // SVG ring: circumference = 2π × r
+      const r   = 28;
+      const circ = 2 * Math.PI * r;
+      const dash = circ * (count / max);
+
+      // Slot bars
+      let slots = '';
+      for (let i = 0; i < max; i++) {
+        slots += `<div class="group-slot-bar-item ${i < count ? 'filled' : ''}"></div>`;
+      }
+
+      const status = groupState.group?.status || user.lookingFor || 'open';
+      const statusLabel = { open: 'Actively Looking', almost: 'Almost Full', full: 'Group Complete' }[status];
+      const statusEmoji = { open: '🔍', almost: '⚡', full: '✓' }[status];
+
+      document.getElementById('group-header').innerHTML = `
+        <div class="group-header-top">
+          <div>
+            <div class="group-header-label">Your FYP Group</div>
+            <div class="group-header-title">${user.name}'s Group</div>
+            <div class="group-header-sub">${statusEmoji} ${statusLabel} · ${groupState.group?.domain || user.domain || 'Domain not set'}</div>
+          </div>
+          <div class="group-completion-ring" aria-label="${pct}% complete">
+            <svg width="72" height="72" viewBox="0 0 72 72">
+              <circle class="ring-bg" cx="36" cy="36" r="${r}" stroke-width="6"/>
+              <circle class="ring-fill" cx="36" cy="36" r="${r}" stroke-width="6"
+                stroke-dasharray="${circ}"
+                stroke-dashoffset="${circ - dash}"/>
+            </svg>
+            <div class="ring-text">
+              ${count}/${max}
+              <span>filled</span>
+            </div>
+          </div>
+        </div>
+        <div class="group-slots-bar" aria-label="Slot indicators">${slots}</div>`;
+    }
+
+    function renderMembers(groupState, currentUser) {
+      const grid  = document.getElementById('members-grid');
+      const count = groupState.memberCount || 1;
+      const max   = groupState.maxMembers  || 3;
+
+      const memberData = groupState.members?.length ? groupState.members : [currentUser];
+
+      let html = '';
+
+      // Filled slots
+      memberData.forEach((m, idx) => {
+        const isOwner = m.role === 'owner' || idx === 0;
+        html += `
+          <div class="member-card" role="listitem">
+            <div class="member-card-header">
+              <div class="member-card-avatar">
+                ${m.avatar
+                  ? `<img src="${m.avatar}" alt="${m.name}">`
+                  : `<span>${getInitials(m.name)}</span>`}
+              </div>
+              <div>
+                <div class="member-card-name">${m.name}</div>
+                <div class="member-card-roll">${m.rollNo}</div>
+              </div>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:2px;">
+              <span class="badge ${deptBadgeColor(m.department)}" style="font-size:.7rem">${m.department}</span>
+              ${m.domain ? `<span class="badge badge-gray" style="font-size:.7rem">${m.domain}</span>` : ''}
+            </div>
+            ${m.skills?.length ? `
+              <div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:4px">
+                ${m.skills.slice(0,3).map(s => `<span class="skill-pill" style="font-size:.68rem;padding:3px 8px">${s}</span>`).join('')}
+                ${m.skills.length > 3 ? `<span class="skill-pill" style="font-size:.68rem;padding:3px 8px;background:var(--gray-100);color:var(--gray-500)">+${m.skills.length - 3}</span>` : ''}
+              </div>` : ''}
+            ${!isOwner ? `
+              <div style="padding-top:10px;border-top:1px solid var(--gray-100);display:flex;gap:6px;margin-top:4px">
+                <a href="view-profile.html?roll=${m.rollNo}" class="btn btn-ghost btn-sm" style="flex:1;font-size:.78rem">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  Profile
+                </a>
+                <button class="btn btn-sm btn-outline" style="flex:1;font-size:.78rem;color:#dc2626;border-color:#fecaca"
+                  onclick="removeMember('${m.id}', '${m.name}')" aria-label="Remove ${m.name} from group">
+                  Remove
+                </button>
+              </div>` : `
+              <div style="padding-top:10px;border-top:1px solid var(--gray-100);margin-top:4px">
+                <a href="profile.html" class="btn btn-ghost btn-sm" style="width:100%;font-size:.78rem">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  Edit My Profile
+                </a>
+              </div>`}
+          </div>`;
+      });
+
+      // Open slots
+      const openCount = max - memberData.length;
+      for (let i = 0; i < openCount; i++) {
+        html += `
+          <div class="member-card open-slot" role="listitem" aria-label="Open group slot"
+               onclick="window.location.href='dashboard.html'" tabindex="0"
+               onkeydown="if(event.key==='Enter')window.location.href='dashboard.html'">
+            <div class="open-slot-icon" aria-hidden="true">+</div>
+            <div class="open-slot-text">Open Slot</div>
+            <div class="open-slot-hint">Click to browse students</div>
+          </div>`;
+      }
+
+      grid.innerHTML = html;
+    }
+
+    function renderGroupPanels(user, groupState = {}) {
+      const count  = groupState.memberCount || user.memberCount  || 1;
+      const max    = groupState.maxMembers  || user.maxMembers   || 3;
+      const needed = max - count;
+      const status = groupState.group?.status || user.lookingFor || 'open';
+      const statusLabel = { open: 'Actively Looking', almost: 'Almost Full', full: 'Group Complete' }[status];
+      const statusClass = { open: 'looking', almost: 'almost', full: 'full' }[status];
+
+      document.getElementById('group-panels').innerHTML = `
+        <!-- Status Panel -->
+        <div class="group-status-panel">
+          <h3 style="font-size:.875rem;font-weight:700;color:var(--gray-800);margin-bottom:4px">Group Status</h3>
+          <div class="group-status-row-2">
+            <span class="gs-key">Department</span>
+            <span class="gs-val"><span class="badge ${deptBadgeColor(user.department)}">${user.department || '—'}</span></span>
+          </div>
+          <div class="group-status-row-2">
+            <span class="gs-key">Project Domain</span>
+            <span class="gs-val">${groupState.group?.domain || user.domain || 'Not set'}</span>
+          </div>
+          <div class="group-status-row-2">
+            <span class="gs-key">Members</span>
+            <span class="gs-val">${count} / ${max}</span>
+          </div>
+          <div class="group-status-row-2">
+            <span class="gs-key">Spots Needed</span>
+            <span class="gs-val">${needed > 0 ? needed + ' more' : 'Complete!'}</span>
+          </div>
+          <div class="group-status-row-2">
+            <span class="gs-key">Visibility</span>
+            <span class="gs-val ${statusClass}">${statusLabel}</span>
+          </div>
+          <div style="margin-top:14px">
+            <a href="profile.html">
+              <button class="btn btn-outline" style="width:100%;font-size:.8rem">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 1.81 14.24M4.93 4.93a10 10 0 0 0-1.81 14.24"/></svg>
+                Change Group Settings
+              </button>
+            </a>
+          </div>
+        </div>
+
+        <!-- Quick Actions Panel -->
+        <div class="group-status-panel">
+          <h3 style="font-size:.875rem;font-weight:700;color:var(--gray-800);margin-bottom:16px">Quick Actions</h3>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <a href="dashboard.html">
+              <button class="btn btn-primary" style="width:100%;font-size:.85rem">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                Browse Students
+              </button>
+            </a>
+            <a href="requests.html">
+              <button class="btn btn-outline" style="width:100%;font-size:.85rem">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                View Requests
+                <span style="margin-left:auto;background:var(--blue-100);color:var(--blue-600);font-size:.68rem;font-weight:700;padding:2px 7px;border-radius:99px">2</span>
+              </button>
+            </a>
+            <a href="profile.html">
+              <button class="btn btn-ghost" style="width:100%;font-size:.85rem;border:1px solid var(--gray-200)">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                Edit My Profile
+              </button>
+            </a>
+            ${needed > 0 ? `
+            <div style="background:var(--blue-50);border:1px solid var(--blue-100);border-radius:var(--radius-md);padding:12px;margin-top:4px">
+              <div style="font-size:.78rem;font-weight:700;color:var(--blue-700);margin-bottom:3px">
+                🔍 Still looking for ${needed} member${needed > 1 ? 's' : ''}
+              </div>
+              <div style="font-size:.73rem;color:var(--blue-600)">
+                Your profile is visible in Browse so students can find you.
+              </div>
+            </div>` : `
+            <div style="background:#dcfce7;border:1px solid #bbf7d0;border-radius:var(--radius-md);padding:12px;margin-top:4px">
+              <div style="font-size:.78rem;font-weight:700;color:#14532d;margin-bottom:3px">
+                ✓ Group Complete!
+              </div>
+              <div style="font-size:.73rem;color:#15803d">
+                Your group is full. Good luck with your FYP!
+              </div>
+            </div>`}
+          </div>
+        </div>`;
+    }
+
+    async function removeMember(userId, name) {
+      if (!confirm(`Remove ${name} from your group?`)) return;
+      showToast(`${name} has been removed from your group.`, 'info');
+      const currentUser = Auth.getSession();
+      if (supabaseClient && currentUser?.groupId && userId) {
+        await supabaseClient
+          .from('group_members')
+          .delete()
+          .eq('group_id', currentUser.groupId)
+          .eq('user_id', userId);
+        const groupState = await loadGroupState(currentUser);
+        renderGroupHeader(currentUser, groupState);
+        renderMembers(groupState, currentUser);
+        renderGroupPanels(currentUser, groupState);
+        return;
+      }
+      if (currentUser && currentUser.memberCount > 1) {
+        currentUser.memberCount--;
+        Auth.setSession(currentUser);
+        renderGroupHeader(currentUser);
+        renderMembers({ members: [currentUser], memberCount: currentUser.memberCount, maxMembers: currentUser.maxMembers }, currentUser);
+        renderGroupPanels(currentUser);
+      }
+    }
+  </script>
+</body>
+</html>

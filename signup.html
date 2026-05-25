@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up — GroupUp | FAST University FYP Partner Finder</title>
+  <meta name="description" content="Create your GroupUp account to start finding FYP group partners at FAST University.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/auth.css">
+</head>
+<body class="auth-body" data-page="signup">
+
+  <!-- ── Toast Container ── -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       LEFT PANEL — Branding
+  ════════════════════════════════════════════════════════ -->
+  <div class="auth-panel-left" role="complementary" aria-label="Branding">
+    <div class="auth-panel-illustration">
+
+      <!-- Brand -->
+      <div class="auth-brand">
+        <div class="auth-brand-icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="9" cy="7" r="4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span class="auth-brand-name">GroupUp</span>
+      </div>
+
+      <!-- SVG Illustration -->
+      <div class="auth-visual" aria-hidden="true">
+        <svg viewBox="0 0 260 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Background circle -->
+          <circle cx="130" cy="130" r="110" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+          <!-- Center node -->
+          <circle cx="130" cy="130" r="28" fill="rgba(255,255,255,0.2)" stroke="rgba(255,255,255,0.5)" stroke-width="2"/>
+          <text x="130" y="137" text-anchor="middle" fill="white" font-size="16" font-family="Arial">🎓</text>
+          <!-- Surrounding nodes -->
+          <circle cx="64"  cy="80"  r="20" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+          <text x="64" y="86" text-anchor="middle" fill="white" font-size="13">👤</text>
+          <circle cx="196" cy="80"  r="20" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+          <text x="196" y="86" text-anchor="middle" fill="white" font-size="13">👤</text>
+          <circle cx="56"  cy="176" r="20" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+          <text x="56" y="182" text-anchor="middle" fill="white" font-size="13">👤</text>
+          <circle cx="204" cy="176" r="20" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+          <text x="204" y="182" text-anchor="middle" fill="white" font-size="13">👤</text>
+          <!-- Connecting lines -->
+          <line x1="84"  y1="88"  x2="108" y2="116" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-dasharray="4 3"/>
+          <line x1="176" y1="88"  x2="152" y2="116" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-dasharray="4 3"/>
+          <line x1="74"  y1="165" x2="108" y2="146" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-dasharray="4 3"/>
+          <line x1="186" y1="165" x2="152" y2="146" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-dasharray="4 3"/>
+          <!-- Dots on lines -->
+          <circle cx="96" cy="102" r="3" fill="rgba(255,255,255,0.5)"/>
+          <circle cx="164" cy="102" r="3" fill="rgba(255,255,255,0.5)"/>
+          <circle cx="91" cy="156" r="3" fill="rgba(255,255,255,0.5)"/>
+          <circle cx="169" cy="156" r="3" fill="rgba(255,255,255,0.5)"/>
+        </svg>
+      </div>
+
+      <h1 class="auth-tagline">Find Your FYP Team</h1>
+      <p class="auth-subline">Connect with FAST University students matching your domain, department, and goals.</p>
+
+      <div class="auth-stats">
+        <div class="auth-stat">
+          <div class="auth-stat-num">400+</div>
+          <div class="auth-stat-label">Students</div>
+        </div>
+        <div class="auth-stat">
+          <div class="auth-stat-num">12+</div>
+          <div class="auth-stat-label">Domains</div>
+        </div>
+        <div class="auth-stat">
+          <div class="auth-stat-num">3</div>
+          <div class="auth-stat-label">Departments</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       RIGHT PANEL — Signup Form
+  ════════════════════════════════════════════════════════ -->
+  <div class="auth-panel-right">
+    <div class="auth-form-container">
+
+      <div class="auth-form-header">
+        <a href="login.html" class="auth-form-back" aria-label="Back to login">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          Back to Login
+        </a>
+        <h2 class="auth-form-title">Create Account</h2>
+        <p class="auth-form-subtitle">Join GroupUp and start finding your FYP partners.</p>
+      </div>
+
+      <!-- Stepper -->
+      <div class="auth-stepper" role="progressbar" aria-valuenow="1" aria-valuemax="3" aria-label="Sign up progress">
+        <div class="step active" id="stepper-1">
+          <div class="step-circle">1</div>
+          <span class="step-label">Identity</span>
+        </div>
+        <div class="step-line" id="line-1"></div>
+        <div class="step" id="stepper-2">
+          <div class="step-circle">2</div>
+          <span class="step-label">Security</span>
+        </div>
+        <div class="step-line" id="line-2"></div>
+        <div class="step" id="stepper-3">
+          <div class="step-circle">3</div>
+          <span class="step-label">Academic</span>
+        </div>
+      </div>
+
+      <!-- ── STEP 1: Identity ── -->
+      <div id="step-1" class="auth-form" style="display:flex; flex-direction:column; gap:18px;">
+
+        <div class="form-group">
+          <label class="form-label" for="full-name">Full Name</label>
+          <div class="form-input-icon-wrap">
+            <span class="input-icon" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </span>
+            <input type="text" id="full-name" class="form-input" placeholder="e.g. Ali Hassan" autocomplete="name" spellcheck="false">
+          </div>
+          <span class="form-error" id="err-full-name"></span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="roll-no">Roll Number</label>
+          <div class="form-input-icon-wrap">
+            <span class="input-icon" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+            </span>
+            <input type="text" id="roll-no" class="form-input" placeholder="23F-0000" maxlength="8" autocomplete="off" spellcheck="false" style="font-family:'Courier New', monospace; letter-spacing:.05em">
+          </div>
+          <code class="roll-preview" id="roll-preview" aria-live="polite">23F-0000</code>
+          <span class="form-error" id="err-roll-no"></span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="student-email">Student Email</label>
+          <div class="form-input-icon-wrap">
+            <span class="input-icon" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </span>
+            <input type="email" id="student-email" class="form-input" placeholder="f230000@cfd.nu.edu.pk" autocomplete="email">
+          </div>
+          <span class="form-hint">Auto-filled from your roll number</span>
+          <span class="form-error" id="err-student-email"></span>
+        </div>
+
+        <div class="auth-form-actions">
+          <button type="button" id="next-step-1" class="btn btn-primary">
+            Continue
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- ── STEP 2: Security ── -->
+      <div id="step-2" class="auth-form" style="display:none; flex-direction:column; gap:18px;">
+
+        <div class="form-group">
+          <label class="form-label" for="password">Password</label>
+          <div class="form-input-icon-wrap">
+            <span class="input-icon" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </span>
+            <input type="password" id="password" class="form-input" placeholder="At least 8 characters" autocomplete="new-password">
+            <span class="input-icon-right toggle-pw" data-target="password" aria-label="Toggle password visibility" role="button">👁</span>
+          </div>
+
+          <!-- Strength bars -->
+          <div class="password-strength" aria-label="Password strength">
+            <div class="strength-bar" id="sb1"></div>
+            <div class="strength-bar" id="sb2"></div>
+            <div class="strength-bar" id="sb3"></div>
+            <div class="strength-bar" id="sb4"></div>
+          </div>
+          <div class="strength-label" aria-live="polite"></div>
+          <span class="form-error" id="err-password"></span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="confirm-password">Confirm Password</label>
+          <div class="form-input-icon-wrap">
+            <span class="input-icon" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </span>
+            <input type="password" id="confirm-password" class="form-input" placeholder="Re-enter password" autocomplete="new-password">
+            <span class="input-icon-right toggle-pw" data-target="confirm-password" aria-label="Toggle confirm password visibility" role="button">👁</span>
+          </div>
+          <span class="form-error" id="err-confirm-password"></span>
+        </div>
+
+        <div class="auth-form-actions" style="flex-direction:row; gap:10px;">
+          <button type="button" id="back-step-2" class="btn btn-outline" style="flex:0 0 auto; padding:13px 20px; width:auto;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <button type="button" id="next-step-2" class="btn btn-primary" style="flex:1; width:auto;">
+            Continue
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- ── STEP 3: Academic Info ── -->
+      <div id="step-3" class="auth-form" style="display:none; flex-direction:column; gap:18px;">
+
+        <div class="form-row" style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+
+          <div class="form-group">
+            <label class="form-label" for="semester">Semester</label>
+            <select id="semester" class="form-input">
+              <option value="">Select</option>
+              <option value="6">Sem 6</option>
+              <option value="7">Sem 7 (FYP)</option>
+            </select>
+            <span class="form-error" id="err-semester"></span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="dept-signup">Department</label>
+            <select id="dept-signup" class="form-input">
+              <option value="">Select</option>
+              <option value="CS">CS — Computer Science</option>
+              <option value="SE">SE — Software Engineering</option>
+              <option value="AI">AI — Artificial Intelligence</option>
+              <option value="EE">EE — Electrical Engineering</option>
+            </select>
+            <span class="form-error" id="err-dept-signup"></span>
+          </div>
+
+        </div>
+
+        <div class="auth-form-actions" style="flex-direction:row; gap:10px;">
+          <button type="button" id="back-step-3" class="btn btn-outline" style="flex:0 0 auto; padding:13px 20px; width:auto;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <button type="button" id="submit-signup" class="btn btn-primary" style="flex:1; width:auto;">
+            Create Account
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- ── Already have account ── -->
+      <p class="auth-footer-text">
+        Already have an account? <a href="login.html">Sign in</a>
+      </p>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.50.0/dist/umd/supabase.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>

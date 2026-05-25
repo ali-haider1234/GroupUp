@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Supervisors — GroupUp</title>
+  <meta name="description" content="Find department supervisor pages for Computer Science, Software Engineering, and Electrical Engineering.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/pages.css">
+</head>
+<body class="supervisors-body" data-page="supervisors">
+
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- ══════════════════════════════════════════════
+       NAVBAR
+  ═══════════════════════════════════════════════ -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <a href="dashboard.html" class="nav-brand" aria-label="GroupUp home">
+      <div class="brand-icon" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+      </div>
+      GroupUp
+    </a>
+
+    <nav class="nav-links">
+      <a href="dashboard.html" class="nav-link">Browse</a>
+      <a href="requests.html" class="nav-link">Requests</a>
+      <a href="mygroup.html" class="nav-link">My Group</a>
+      <a href="supervisors.html" class="nav-link active" aria-current="page">Supervisors</a>
+      <a href="about.html" class="nav-link">About</a>
+    </nav>
+
+    <div class="nav-actions">
+      <div class="nav-user" id="nav-user-trigger" role="button" tabindex="0" aria-haspopup="true" aria-label="User menu">
+        <div class="nav-avatar" id="nav-avatar">?</div>
+        <div class="nav-user-info">
+          <span class="nav-user-name" id="nav-user-name">Loading</span>
+          <span class="nav-user-roll" id="nav-user-roll">--</span>
+        </div>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        <div class="user-dropdown" id="user-dropdown" role="menu">
+          <a href="profile.html" class="dropdown-item" role="menuitem">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            My Profile
+          </a>
+          <a href="mygroup.html" class="dropdown-item" role="menuitem">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            My Group
+          </a>
+          <div class="dropdown-divider"></div>
+          <div class="dropdown-item danger" id="logout-btn" role="menuitem" tabindex="0">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Sign Out
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ══════════════════════════════════════════════
+       PAGE CONTENT
+  ═══════════════════════════════════════════════ -->
+  <div class="supervisors-page">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="dashboard.html">Dashboard</a>
+      <span class="breadcrumb-sep" aria-hidden="true">›</span>
+      <span class="breadcrumb-current">Supervisors</span>
+    </nav>
+
+    <div class="page-title-block">
+      <h1>Supervisor Departments</h1>
+      <p>Choose a department to view the official faculty and supervisor listings.</p>
+    </div>
+
+    <div class="supervisor-grid" role="list">
+      <a class="supervisor-card" href="https://cfd.nu.edu.pk/department-cs/" target="_blank" rel="noopener noreferrer" role="listitem" aria-label="Computer Science department faculty page">
+        <div class="supervisor-card-top">
+          <div class="supervisor-icon" aria-hidden="true">CS</div>
+          <div>
+            <div class="supervisor-title">Computer Science</div>
+            <div class="supervisor-sub">Department of Computer Science</div>
+          </div>
+        </div>
+        <div class="supervisor-cta">Open Faculty Page →</div>
+      </a>
+
+      <a class="supervisor-card" href="https://cfd.nu.edu.pk/department-se/" target="_blank" rel="noopener noreferrer" role="listitem" aria-label="Software Engineering department faculty page">
+        <div class="supervisor-card-top">
+          <div class="supervisor-icon se" aria-hidden="true">SE</div>
+          <div>
+            <div class="supervisor-title">Software Engineering</div>
+            <div class="supervisor-sub">Department of Software Engineering</div>
+          </div>
+        </div>
+        <div class="supervisor-cta">Open Faculty Page →</div>
+      </a>
+
+      <a class="supervisor-card" href="https://cfd.nu.edu.pk/department-ee/" target="_blank" rel="noopener noreferrer" role="listitem" aria-label="Electrical Engineering department faculty page">
+        <div class="supervisor-card-top">
+          <div class="supervisor-icon ee" aria-hidden="true">EE</div>
+          <div>
+            <div class="supervisor-title">Electrical Engineering</div>
+            <div class="supervisor-sub">Department of Electrical Engineering</div>
+          </div>
+        </div>
+        <div class="supervisor-cta">Open Faculty Page →</div>
+      </a>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.50.0/dist/umd/supabase.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      initNavbarScroll();
+      initDropdown('#nav-user-trigger', '#user-dropdown');
+
+      let currentUser = Auth.getSession();
+      if (!currentUser) {
+        window.location.href = 'login.html';
+        return;
+      }
+      if (supabaseClient && currentUser?.id) {
+        const refreshed = await fetchProfileWithGroupInfo(currentUser.id);
+        if (refreshed) {
+          currentUser = refreshed;
+          Auth.setSession(refreshed);
+        }
+      }
+      renderNavUser(currentUser);
+
+      document.getElementById('logout-btn')?.addEventListener('click', () => {
+        Auth.logout();
+        window.location.href = 'login.html';
+      });
+    });
+
+    function renderNavUser(user) {
+      document.getElementById('nav-user-name').textContent = user.name.split(' ')[0];
+      document.getElementById('nav-user-roll').textContent = user.rollNo;
+      const av = document.getElementById('nav-avatar');
+      av.innerHTML = user.avatar ? `<img src="${user.avatar}" alt="${user.name}">` : getInitials(user.name);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Requests — GroupUp</title>
+  <meta name="description" content="Manage incoming and outgoing FYP connection requests on GroupUp.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/pages.css">
+</head>
+
+<body class="requests-body" data-page="requests">
+
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- ══════════════════════════════════════════════
+       NAVBAR
+  ═══════════════════════════════════════════════ -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <a href="dashboard.html" class="nav-brand" aria-label="GroupUp home">
+      <div class="brand-icon" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+          <circle cx="9" cy="7" r="4" />
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+        </svg>
+      </div>
+      GroupUp
+    </a>
+
+    <nav class="nav-links">
+      <a href="dashboard.html" class="nav-link">Browse</a>
+      <a href="requests.html" class="nav-link active" aria-current="page">Requests</a>
+      <a href="mygroup.html" class="nav-link">My Group</a>
+      <a href="supervisors.html" class="nav-link">Supervisors</a>
+      <a href="about.html" class="nav-link">About</a>
+    </nav>
+
+    <div class="nav-actions">
+      <div class="nav-user" id="nav-user-trigger" role="button" tabindex="0" aria-haspopup="true"
+        aria-label="User menu">
+        <div class="nav-avatar" id="nav-avatar">?</div>
+        <div class="nav-user-info">
+          <span class="nav-user-name" id="nav-user-name">Loading</span>
+          <span class="nav-user-roll" id="nav-user-roll">--</span>
+        </div>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9" />
+        </svg>
+        <div class="user-dropdown" id="user-dropdown" role="menu">
+          <a href="profile.html" class="dropdown-item" role="menuitem">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+            My Profile
+          </a>
+          <a href="mygroup.html" class="dropdown-item" role="menuitem">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+            </svg>
+            My Group
+          </a>
+          <div class="dropdown-divider"></div>
+          <div class="dropdown-item danger" id="logout-btn" role="menuitem" tabindex="0">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+              <polyline points="16 17 21 12 16 7" />
+              <line x1="21" y1="12" x2="9" y2="12" />
+            </svg>
+            Sign Out
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ══════════════════════════════════════════════
+       PAGE CONTENT
+  ═══════════════════════════════════════════════ -->
+  <div class="requests-page">
+
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="dashboard.html">Dashboard</a>
+      <span class="breadcrumb-sep" aria-hidden="true">›</span>
+      <span class="breadcrumb-current">Requests</span>
+    </nav>
+
+    <!-- Header -->
+    <div class="page-title-block">
+      <h1>Connection Requests</h1>
+      <p>Manage incoming requests from students who want to join your group, and track your own sent requests.</p>
+    </div>
+
+    <!-- Tabs -->
+    <div class="req-tabs" role="tablist" aria-label="Request categories">
+      <div class="req-tab active" id="tab-incoming" role="tab" aria-selected="true" aria-controls="panel-incoming"
+        tabindex="0">
+        Incoming
+        <span class="req-tab-count" id="incoming-count">0</span>
+      </div>
+      <div class="req-tab" id="tab-sent" role="tab" aria-selected="false" aria-controls="panel-sent" tabindex="-1">
+        Sent
+        <span class="req-tab-count" style="background:var(--gray-400)" id="sent-count">0</span>
+      </div>
+    </div>
+
+    <!-- ── Incoming Panel ── -->
+    <div id="panel-incoming" role="tabpanel" aria-labelledby="tab-incoming">
+      <!-- Cards injected by JS -->
+    </div>
+
+    <!-- ── Sent Panel ── -->
+    <div id="panel-sent" role="tabpanel" aria-labelledby="tab-sent" style="display:none">
+      <!-- Cards injected by JS -->
+    </div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.50.0/dist/umd/supabase.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      initPageAnimation();
+      initNavbarScroll();
+      initDropdown('#nav-user-trigger', '#user-dropdown');
+
+      let currentUser = Auth.getSession();
+      if (!currentUser) {
+        window.location.href = 'login.html';
+        return;
+      }
+      if (supabaseClient && currentUser?.id) {
+        const refreshed = await fetchProfileWithGroupInfo(currentUser.id);
+        if (refreshed) {
+          currentUser = refreshed;
+          Auth.setSession(refreshed);
+        }
+      }
+      renderNavUser(currentUser);
+
+      if (supabaseClient && currentUser?.id) {
+        const { incoming, sent } = await fetchRequestsForUser(currentUser.id);
+        const otherIds = [
+          ...incoming.map(req => req.from_user_id),
+          ...sent.map(req => req.to_user_id)
+        ].filter(Boolean);
+
+        const profiles = await fetchProfilesByUserIds([...new Set(otherIds)]);
+        const profileMap = profiles.reduce((acc, profile) => {
+          acc[profile.id] = profile;
+          return acc;
+        }, {});
+
+        renderIncoming(incoming, profileMap, currentUser);
+        renderSent(sent, profileMap, currentUser);
+      } else {
+        // Fallback to mock requests
+        const incomingRolls = ['22F-0042', '23F-0265'];
+        const sentRolls = JSON.parse(sessionStorage.getItem('sent_requests') || '[]');
+        const profileMap = Object.values(GroupUp.users).reduce((acc, user) => {
+          acc[user.id] = user;
+          return acc;
+        }, {});
+
+        const incoming = incomingRolls
+          .map(roll => GroupUp.users[roll])
+          .filter(Boolean)
+          .map(user => ({ id: user.rollNo, from_user_id: user.id }));
+
+        const sent = sentRolls
+          .map(roll => GroupUp.users[roll])
+          .filter(Boolean)
+          .map(user => ({ id: user.rollNo, to_user_id: user.id, status: 'pending' }));
+
+        renderIncoming(incoming, profileMap, currentUser);
+        renderSent(sent, profileMap, currentUser);
+      }
+
+      // Tab switching
+      const tabIncoming = document.getElementById('tab-incoming');
+      const tabSent = document.getElementById('tab-sent');
+      const panelIn = document.getElementById('panel-incoming');
+      const panelSent = document.getElementById('panel-sent');
+
+      tabIncoming.addEventListener('click', () => {
+        tabIncoming.classList.add('active'); tabIncoming.setAttribute('aria-selected', 'true');
+        tabSent.classList.remove('active'); tabSent.setAttribute('aria-selected', 'false');
+        panelIn.style.display = 'block';
+        panelSent.style.display = 'none';
+      });
+
+      tabSent.addEventListener('click', () => {
+        tabSent.classList.add('active'); tabSent.setAttribute('aria-selected', 'true');
+        tabIncoming.classList.remove('active'); tabIncoming.setAttribute('aria-selected', 'false');
+        panelSent.style.display = 'block';
+        panelIn.style.display = 'none';
+      });
+
+      // Keyboard nav for tabs
+      [tabIncoming, tabSent].forEach((tab, idx, arr) => {
+        tab.addEventListener('keydown', e => {
+          if (e.key === 'ArrowRight') { e.preventDefault(); arr[(idx + 1) % arr.length].click(); arr[(idx + 1) % arr.length].focus(); }
+          if (e.key === 'ArrowLeft') { e.preventDefault(); arr[(idx - 1 + arr.length) % arr.length].click(); arr[(idx - 1 + arr.length) % arr.length].focus(); }
+        });
+      });
+
+      document.getElementById('logout-btn')?.addEventListener('click', () => { Auth.logout(); window.location.href = 'login.html'; });
+    });
+
+    function renderNavUser(user) {
+      document.getElementById('nav-user-name').textContent = user.name.split(' ')[0];
+      document.getElementById('nav-user-roll').textContent = user.rollNo;
+      const av = document.getElementById('nav-avatar');
+      av.innerHTML = user.avatar ? `<img src="${user.avatar}" alt="${user.name}">` : getInitials(user.name);
+    }
+
+    function renderIncoming(requests, profileMap, currentUser) {
+      const panel = document.getElementById('panel-incoming');
+      document.getElementById('incoming-count').textContent = requests.length;
+
+      if (!requests.length) {
+        panel.innerHTML = buildEmptyState('No incoming requests', 'When students send you a request, they will appear here.');
+        return;
+      }
+
+      panel.innerHTML = requests.map(req => {
+        const s = profileMap[req.from_user_id];
+        if (!s) return '';
+        const compatible = GroupUp.canGroupWith(currentUser.department, s.department);
+        const needed = getMembersNeeded(currentUser.memberCount || 1, currentUser.maxMembers || 3);
+
+        return `
+          <div class="req-card" id="req-${req.id}">
+            <div class="req-card-avatar">
+              ${s.avatar ? `<img src="${s.avatar}" alt="${s.name}">` : `<span>${getInitials(s.name)}</span>`}
+            </div>
+            <div class="req-card-info">
+              <div class="req-card-name">${s.name}</div>
+              <div class="req-card-meta">
+                <span class="badge ${deptBadgeColor(s.department)}" style="font-size:.65rem;padding:2px 7px">${s.department}</span>
+                <span style="font-family:monospace;font-size:.75rem;color:var(--gray-400)">${s.rollNo}</span>
+                ${!compatible ? `<span style="color:#dc2626;font-size:.72rem;font-weight:600">⚠ Dept. mismatch</span>` : ''}
+              </div>
+              <div class="req-card-domain">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                ${s.domain || 'Domain not set'}
+              </div>
+            </div>
+            <div class="req-card-time">2h ago</div>
+            <div class="req-card-actions">
+              <a href="view-profile.html?roll=${s.rollNo}" class="btn btn-ghost btn-sm" title="View profile">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                View
+              </a>
+              ${compatible
+            ? `<button class="btn btn-outline btn-sm" onclick="declineRequest('${req.id}')" aria-label="Decline request from ${s.name}">Decline</button>
+                   <button class="btn btn-primary btn-sm" onclick="acceptRequest('${req.id}', '${s.name}', '${req.from_user_id}')" aria-label="Accept request from ${s.name}">
+                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                     Accept
+                   </button>`
+            : `<button class="btn btn-sm" style="background:#fee2e2;color:#dc2626;cursor:not-allowed" disabled aria-disabled="true">⛔ Restricted</button>`
+          }
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    function renderSent(requests, profileMap, currentUser) {
+      const panel = document.getElementById('panel-sent');
+      document.getElementById('sent-count').textContent = requests.length;
+
+      if (!requests.length) {
+        panel.innerHTML = buildEmptyState('No sent requests yet', 'Browse students and click Connect to send your first request.');
+        return;
+      }
+
+      panel.innerHTML = requests.map(req => {
+        const s = profileMap[req.to_user_id];
+        if (!s) return '';
+        const st = req.status || 'pending';
+        const statusLabels = { pending: 'Pending', accepted: '✓ Accepted', rejected: '✗ Declined' };
+        const statusColors = { pending: 'background:var(--gray-100);color:var(--gray-500)', accepted: 'background:#dcfce7;color:#15803d', rejected: 'background:#fee2e2;color:#991b1b' };
+
+        return `
+          <div class="req-card" id="sent-${req.id}">
+            <div class="req-card-avatar">
+              ${s.avatar ? `<img src="${s.avatar}" alt="${s.name}">` : `<span>${getInitials(s.name)}</span>`}
+            </div>
+            <div class="req-card-info">
+              <div class="req-card-name">${s.name}</div>
+              <div class="req-card-meta">
+                <span class="badge ${deptBadgeColor(s.department)}" style="font-size:.65rem;padding:2px 7px">${s.department}</span>
+                <span style="font-family:monospace;font-size:.75rem;color:var(--gray-400)">${s.rollNo}</span>
+              </div>
+              <div class="req-card-domain">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                ${s.domain || 'Domain not set'}
+              </div>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center">
+              <span class="req-sent-status ${st}" style="${statusColors[st]}">${statusLabels[st]}</span>
+              <span class="req-card-time">Today</span>
+            </div>
+            <div class="req-card-actions">
+              <a href="view-profile.html?roll=${s.rollNo}" class="btn btn-ghost btn-sm">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                View
+              </a>
+              ${st === 'pending'
+            ? `<button class="btn btn-outline btn-sm" onclick="withdrawRequest('${req.id}')" aria-label="Withdraw request to ${s.name}">Withdraw</button>`
+            : ''}
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    async function acceptRequest(requestId, name, fromUserId) {
+      const card = document.getElementById(`req-${requestId}`);
+      const currentUser = Auth.getSession();
+      if (supabaseClient && requestId) {
+        const result = await updateRequestStatus(requestId, 'accepted');
+        if (!result.ok) {
+          showToast(result.msg || 'Failed to accept request.', 'error');
+          return;
+        }
+        if (currentUser?.groupId && fromUserId) {
+          const addResult = await addMemberToGroup(currentUser.groupId, fromUserId);
+          if (!addResult.ok) {
+            showToast(addResult.msg || 'Failed to add member to group.', 'error');
+          }
+        }
+      }
+      if (card) {
+        const actions = card.querySelector('.req-card-actions');
+        actions.innerHTML = `<span class="req-sent-status accepted" style="background:#dcfce7;color:#15803d">✓ Accepted</span>`;
+        card.style.borderColor = '#bbf7d0';
+        card.style.background = '#f0fdf4';
+      }
+      showToast(`✓ You accepted ${name}'s request! Welcome to the group.`, 'success');
+
+      // Update counts
+      const count = parseInt(document.getElementById('incoming-count').textContent);
+      if (count > 0) document.getElementById('incoming-count').textContent = count - 1;
+    }
+
+    async function declineRequest(requestId) {
+      const card = document.getElementById(`req-${requestId}`);
+      if (supabaseClient && requestId) {
+        const result = await updateRequestStatus(requestId, 'rejected');
+        if (!result.ok) {
+          showToast(result.msg || 'Failed to decline request.', 'error');
+          return;
+        }
+      }
+      if (card) {
+        card.style.opacity = '0';
+        card.style.transition = 'opacity .3s ease';
+        setTimeout(() => card.remove(), 300);
+      }
+      const count = parseInt(document.getElementById('incoming-count').textContent);
+      if (count > 0) document.getElementById('incoming-count').textContent = count - 1;
+      showToast('Request declined.', 'info');
+    }
+
+    async function withdrawRequest(requestId) {
+      const card = document.getElementById(`sent-${requestId}`);
+      if (supabaseClient && requestId) {
+        const result = await updateRequestStatus(requestId, 'cancelled');
+        if (!result.ok) {
+          showToast(result.msg || 'Failed to withdraw request.', 'error');
+          return;
+        }
+      }
+      if (card) {
+        card.style.opacity = '0';
+        card.style.transition = 'opacity .3s ease';
+        setTimeout(() => card.remove(), 300);
+      }
+      const count = parseInt(document.getElementById('sent-count').textContent);
+      if (count > 0) document.getElementById('sent-count').textContent = count - 1;
+      showToast('Request withdrawn.', 'info');
+    }
+
+    function buildEmptyState(title, sub) {
+      return `
+        <div class="req-empty">
+          <div class="req-empty-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" style="opacity:.4;color:var(--blue-400)"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <div class="req-empty-title">${title}</div>
+          <div class="req-empty-sub">${sub}</div>
+          <br>
+          <a href="dashboard.html" class="btn btn-primary" style="margin-top:12px;display:inline-flex">← Browse Students</a>
+        </div>`;
+    }
+  </script>
+</body>
+
+</html>
